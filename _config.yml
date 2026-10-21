@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f26/team01-f26-06
 owner: ucsb-cs156-f26
 repo_name: team01-f26-06
-pull_requests: [{"author":{"id":"U_kgDOCqyyAQ","is_bot":false,"login":"nir-nutman","name":"Nir"},"headRefName":"nn-MenuItemReview-create-db","number":47,"title":"create db table for MenuItemReview","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/47"}]
+pull_requests: [{"author":{"id":"U_kgDOCMLbkw","is_bot":false,"login":"annagornyitzki","name":"Anna Gornyitzki"},"headRefName":"Anna-ArticlesController","number":48,"title":"Articles: add controller with GET /all and POST","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/48"},{"author":{"id":"U_kgDOCqyyAQ","is_bot":false,"login":"nir-nutman","name":"Nir"},"headRefName":"nn-MenuItemReview-create-db","number":47,"title":"create db table for MenuItemReview","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/47"}]
