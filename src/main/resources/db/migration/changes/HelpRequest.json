@@ -3,7 +3,7 @@
       {
         "changeSet": {
           "id": "HelpRequest-1",
-          "author": "YourGitHubID",
+          "author": "DeseraeM",
           "preConditions": [
             {
               "onFail": "MARK_RAN"
