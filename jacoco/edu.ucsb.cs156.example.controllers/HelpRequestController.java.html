@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;HelpRequest&quot;)
 @RequestMapping(&quot;/api/helprequest&quot;)
 @RestController
-<span class="fc" id="L23">@Slf4j</span>
-<span class="fc" id="L24">public class HelpRequestController extends ApiController {</span>
+<span class="fc" id="L24">@Slf4j</span>
+<span class="fc" id="L25">public class HelpRequestController extends ApiController {</span>
 
   @Autowired HelpRequestRepository helpRequestRepository;
 
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;HelpRequest&gt; allHelpRequests() {
-<span class="fc" id="L32">    return helpRequestRepository.findAll();</span>
+<span class="fc" id="L33">    return helpRequestRepository.findAll();</span>
   }
 
   @Operation(
@@ -40,12 +41,12 @@ import org.springframework.web.bind.annotation.RestController;
   public HelpRequest getById(
       @Parameter(name = &quot;id&quot;, description = &quot;Database id of the help request, e.g. 7&quot;) @RequestParam
           Long id) {
-<span class="fc" id="L43">    HelpRequest helpRequest =</span>
+<span class="fc" id="L44">    HelpRequest helpRequest =</span>
         helpRequestRepository
-<span class="fc" id="L45">            .findById(id)</span>
-<span class="fc" id="L46">            .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
+<span class="fc" id="L46">            .findById(id)</span>
+<span class="fc" id="L47">            .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
 
-<span class="fc" id="L48">    return helpRequest;</span>
+<span class="fc" id="L49">    return helpRequest;</span>
   }
 
   @Operation(summary = &quot;Create a new help request&quot;)
@@ -71,15 +72,33 @@ import org.springframework.web.bind.annotation.RestController;
           @RequestParam
           boolean solved) {
 
-<span class="fc" id="L74">    HelpRequest helpRequest = new HelpRequest();</span>
-<span class="fc" id="L75">    helpRequest.setRequesterEmail(requesterEmail);</span>
-<span class="fc" id="L76">    helpRequest.setTeamId(teamId);</span>
-<span class="fc" id="L77">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
-<span class="fc" id="L78">    helpRequest.setRequestTime(requestTime);</span>
-<span class="fc" id="L79">    helpRequest.setExplanation(explanation);</span>
-<span class="fc" id="L80">    helpRequest.setSolved(solved);</span>
+<span class="fc" id="L75">    HelpRequest helpRequest = new HelpRequest();</span>
+<span class="fc" id="L76">    helpRequest.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L77">    helpRequest.setTeamId(teamId);</span>
+<span class="fc" id="L78">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
+<span class="fc" id="L79">    helpRequest.setRequestTime(requestTime);</span>
+<span class="fc" id="L80">    helpRequest.setExplanation(explanation);</span>
+<span class="fc" id="L81">    helpRequest.setSolved(solved);</span>
 
-<span class="fc" id="L82">    return helpRequestRepository.save(helpRequest);</span>
+<span class="fc" id="L83">    return helpRequestRepository.save(helpRequest);</span>
+  }
+
+  @Operation(
+      summary = &quot;Delete a help request&quot;,
+      description = &quot;Deletes the help request with the given id, or returns a 404 if none exists&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
+  @DeleteMapping(&quot;&quot;)
+  public Object deleteHelpRequest(
+      @Parameter(name = &quot;id&quot;, description = &quot;Database id of the help request to delete, e.g. 7&quot;)
+          @RequestParam
+          Long id) {
+<span class="fc" id="L95">    HelpRequest helpRequest =</span>
+        helpRequestRepository
+<span class="fc" id="L97">            .findById(id)</span>
+<span class="fc" id="L98">            .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
+
+<span class="fc" id="L100">    helpRequestRepository.delete(helpRequest);</span>
+<span class="fc" id="L101">    return genericMessage(&quot;HelpRequest with id %s deleted&quot;.formatted(id));</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
