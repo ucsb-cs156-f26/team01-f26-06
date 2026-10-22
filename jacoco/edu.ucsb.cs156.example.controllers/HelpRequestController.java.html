@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HelpRequestController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">team01</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.example.controllers</a> &gt; <span class="el_source">HelpRequestController.java</span></div><h1>HelpRequestController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.example.controllers;
 
 import edu.ucsb.cs156.example.entities.HelpRequest;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.HelpRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;HelpRequest&quot;)
 @RequestMapping(&quot;/api/helprequest&quot;)
 @RestController
-<span class="fc" id="L22">@Slf4j</span>
-<span class="fc" id="L23">public class HelpRequestController extends ApiController {</span>
+<span class="fc" id="L23">@Slf4j</span>
+<span class="fc" id="L24">public class HelpRequestController extends ApiController {</span>
 
   @Autowired HelpRequestRepository helpRequestRepository;
 
@@ -28,7 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;HelpRequest&gt; allHelpRequests() {
-<span class="fc" id="L31">    return helpRequestRepository.findAll();</span>
+<span class="fc" id="L32">    return helpRequestRepository.findAll();</span>
+  }
+
+  @Operation(
+      summary = &quot;Gets one help request&quot;,
+      description = &quot;Returns the help request with the given id, or a 404 if none exists&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+  @GetMapping(&quot;&quot;)
+  public HelpRequest getById(
+      @Parameter(name = &quot;id&quot;, description = &quot;Database id of the help request, e.g. 7&quot;) @RequestParam
+          Long id) {
+<span class="fc" id="L43">    HelpRequest helpRequest =</span>
+        helpRequestRepository
+<span class="fc" id="L45">            .findById(id)</span>
+<span class="fc" id="L46">            .orElseThrow(() -&gt; new EntityNotFoundException(HelpRequest.class, id));</span>
+
+<span class="fc" id="L48">    return helpRequest;</span>
   }
 
   @Operation(summary = &quot;Create a new help request&quot;)
@@ -54,15 +71,15 @@ import org.springframework.web.bind.annotation.RestController;
           @RequestParam
           boolean solved) {
 
-<span class="fc" id="L57">    HelpRequest helpRequest = new HelpRequest();</span>
-<span class="fc" id="L58">    helpRequest.setRequesterEmail(requesterEmail);</span>
-<span class="fc" id="L59">    helpRequest.setTeamId(teamId);</span>
-<span class="fc" id="L60">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
-<span class="fc" id="L61">    helpRequest.setRequestTime(requestTime);</span>
-<span class="fc" id="L62">    helpRequest.setExplanation(explanation);</span>
-<span class="fc" id="L63">    helpRequest.setSolved(solved);</span>
+<span class="fc" id="L74">    HelpRequest helpRequest = new HelpRequest();</span>
+<span class="fc" id="L75">    helpRequest.setRequesterEmail(requesterEmail);</span>
+<span class="fc" id="L76">    helpRequest.setTeamId(teamId);</span>
+<span class="fc" id="L77">    helpRequest.setTableOrBreakoutRoom(tableOrBreakoutRoom);</span>
+<span class="fc" id="L78">    helpRequest.setRequestTime(requestTime);</span>
+<span class="fc" id="L79">    helpRequest.setExplanation(explanation);</span>
+<span class="fc" id="L80">    helpRequest.setSolved(solved);</span>
 
-<span class="fc" id="L65">    return helpRequestRepository.save(helpRequest);</span>
+<span class="fc" id="L82">    return helpRequestRepository.save(helpRequest);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
