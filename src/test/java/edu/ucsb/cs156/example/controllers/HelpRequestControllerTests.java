@@ -363,7 +363,8 @@ public class HelpRequestControllerTests extends ControllerTestCase {
             .perform(
                 put("/api/helprequest")
                     .param("id", "67")
-                    .contentType(MediaType.APPLICATION_JSON)                    .characterEncoding("utf-8")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
                     .content(requestBody)
                     .with(csrf()))
             .andExpect(status().isNotFound())
