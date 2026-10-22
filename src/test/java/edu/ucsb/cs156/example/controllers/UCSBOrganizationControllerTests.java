@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -213,5 +214,87 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     String expectedJson = mapper.writeValueAsString(sky);
     String responseString = response.getResponse().getContentAsString();
     assertEquals(expectedJson, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_edit_an_existing_ucsborganization() throws Exception {
+    // arrange
+
+    UCSBOrganization skyOrig =
+        UCSBOrganization.builder()
+            .orgCode("SKY")
+            .orgTranslationShort("SKYDIVING CLUB")
+            .orgTranslation("SKYDIVING CLUB AT UCSB")
+            .inactive(false)
+            .build();
+
+    UCSBOrganization skyEdited =
+        UCSBOrganization.builder()
+            .orgCode("SKY")
+            .orgTranslationShort("SKY CLUB")
+            .orgTranslation("SKYDIVING CLUB AT UC SANTA BARBARA")
+            .inactive(true)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(skyEdited);
+
+    when(ucsbOrganizationRepository.findById(eq("SKY"))).thenReturn(Optional.of(skyOrig));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsborganization")
+                    .param("orgCode", "SKY")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).findById("SKY");
+    verify(ucsbOrganizationRepository, times(1))
+        .save(skyEdited); // should be saved with updated info
+    String responseString = response.getResponse().getContentAsString();
+    assertEquals(requestBody, responseString);
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_cannot_edit_ucsborganization_that_does_not_exist() throws Exception {
+    // arrange
+
+    UCSBOrganization editedOrg =
+        UCSBOrganization.builder()
+            .orgCode("munger-hall")
+            .orgTranslationShort("MUNGER HALL")
+            .orgTranslation("MUNGER HALL RESIDENCE")
+            .inactive(false)
+            .build();
+
+    String requestBody = mapper.writeValueAsString(editedOrg);
+
+    when(ucsbOrganizationRepository.findById(eq("munger-hall"))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(
+                put("/api/ucsborganization")
+                    .param("orgCode", "munger-hall")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8")
+                    .content(requestBody)
+                    .with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(ucsbOrganizationRepository, times(1)).findById("munger-hall");
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("UCSBOrganization with id munger-hall not found", json.get("message"));
   }
 }
