@@ -64,6 +64,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#allOrganizations()" tabindex="0">allOrganizations()</a></li>
+<li><a href="#getById(java.lang.String)" tabindex="0">getById(String)</a></li>
 <li><a href="#postOrganization(java.lang.String,java.lang.String,java.lang.String,boolean)" tabindex="0">postOrganization(String, String, String, boolean)</a></li>
 </ol>
 </li>
@@ -117,13 +118,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;<a href="../entities/UCSBOrganization.html" title="class in edu.ucsb.cs156.example.entities">UCSBOrganization</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#allOrganizations()" class="member-name-link">allOrganizations</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method returns a list of all ucsborganizations.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/UCSBOrganization.html" title="class in edu.ucsb.cs156.example.entities">UCSBOrganization</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#postOrganization(java.lang.String,java.lang.String,java.lang.String,boolean)" class="member-name-link">postOrganization</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgCode,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getById(java.lang.String)" class="member-name-link">getById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgCode)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method returns a single organization.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/UCSBOrganization.html" title="class in edu.ucsb.cs156.example.entities">UCSBOrganization</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#postOrganization(java.lang.String,java.lang.String,java.lang.String,boolean)" class="member-name-link">postOrganization</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgCode,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgTranslationShort,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgTranslation,
  boolean&nbsp;inactive)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This method creates a new organization.</div>
+</div>
 </div>
 </div>
 </div>
@@ -167,6 +177,29 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@PreAuthorize("hasRole('ROLE_USER')")
 @GetMapping("/all")
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../entities/UCSBOrganization.html" title="class in edu.ucsb.cs156.example.entities">UCSBOrganization</a>&gt;</span>&nbsp;<span class="element-name">allOrganizations</span>()</div>
+<div class="block">This method returns a list of all ucsborganizations.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a list of all ucsborganizations</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getById(java.lang.String)">
+<h3>getById</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@PreAuthorize("hasRole('ROLE_USER')")
+@GetMapping("")
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/UCSBOrganization.html" title="class in edu.ucsb.cs156.example.entities">UCSBOrganization</a></span>&nbsp;<span class="element-name">getById</span><wbr><span class="parameters">(@RequestParam
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgCode)</span></div>
+<div class="block">This method returns a single organization.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>orgCode</code> - code of the organization</dd>
+<dt>Returns:</dt>
+<dd>a single organization</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -184,6 +217,16 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;orgTranslation,
  @RequestParam
  boolean&nbsp;inactive)</span></div>
+<div class="block">This method creates a new organization. Accessible only to users with the role "ROLE_ADMIN".</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>orgCode</code> - code of the organization</dd>
+<dd><code>orgTranslationShort</code> - short translation of the organization name</dd>
+<dd><code>orgTranslation</code> - full translation of the organization name</dd>
+<dd><code>inactive</code> - whether or not the organization is inactive</dd>
+<dt>Returns:</dt>
+<dd>the saved organization</dd>
+</dl>
 </div>
 </section>
 </li>
