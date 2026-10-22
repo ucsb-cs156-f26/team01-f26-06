@@ -6,6 +6,7 @@ import edu.ucsb.cs156.example.repositories.HelpRequestRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +48,35 @@ public class HelpRequestController extends ApiController {
         helpRequestRepository
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException(HelpRequest.class, id));
+
+    return helpRequest;
+  }
+
+  @Operation(
+      summary = "Update a help request",
+      description =
+          "Updates the help request with the given id using the JSON body, or returns a 404 if none exists")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PutMapping("")
+  public HelpRequest updateHelpRequest(
+      @Parameter(name = "id", description = "Database id of the help request to update, e.g. 7")
+          @RequestParam
+          Long id,
+      @RequestBody @Valid HelpRequest incoming) {
+
+    HelpRequest helpRequest =
+        helpRequestRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(HelpRequest.class, id));
+
+    helpRequest.setRequesterEmail(incoming.getRequesterEmail());
+    helpRequest.setTeamId(incoming.getTeamId());
+    helpRequest.setTableOrBreakoutRoom(incoming.getTableOrBreakoutRoom());
+    helpRequest.setRequestTime(incoming.getRequestTime());
+    helpRequest.setExplanation(incoming.getExplanation());
+    helpRequest.setSolved(incoming.getSolved());
+
+    helpRequestRepository.save(helpRequest);
 
     return helpRequest;
   }
