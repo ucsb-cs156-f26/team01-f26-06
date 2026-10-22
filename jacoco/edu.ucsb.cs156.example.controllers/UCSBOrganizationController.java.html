@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UCSBOrganizationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">team01</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.example.controllers</a> &gt; <span class="el_source">UCSBOrganizationController.java</span></div><h1>UCSBOrganizationController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.example.controllers;
 
 import edu.ucsb.cs156.example.entities.UCSBOrganization;
+import edu.ucsb.cs156.example.errors.EntityNotFoundException;
 import edu.ucsb.cs156.example.repositories.UCSBOrganizationRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,19 +19,51 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = &quot;UCSBOrganization&quot;)
 @RequestMapping(&quot;/api/ucsborganization&quot;)
 @RestController
-<span class="fc" id="L21">@Slf4j</span>
-<span class="fc" id="L22">public class UCSBOrganizationController extends ApiController {</span>
+<span class="fc" id="L22">@Slf4j</span>
+<span class="fc" id="L23">public class UCSBOrganizationController extends ApiController {</span>
 
   @Autowired UCSBOrganizationRepository ucsbOrganizationRepository;
 
+  /**
+   * This method returns a list of all ucsborganizations.
+   *
+   * @return a list of all ucsborganizations
+   */
   @Operation(summary = &quot;List all ucsb organizations&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;/all&quot;)
   public Iterable&lt;UCSBOrganization&gt; allOrganizations() {
-<span class="fc" id="L30">    Iterable&lt;UCSBOrganization&gt; organizations = ucsbOrganizationRepository.findAll();</span>
-<span class="fc" id="L31">    return organizations;</span>
+<span class="fc" id="L36">    Iterable&lt;UCSBOrganization&gt; organizations = ucsbOrganizationRepository.findAll();</span>
+<span class="fc" id="L37">    return organizations;</span>
   }
 
+  /**
+   * This method returns a single organization.
+   *
+   * @param orgCode code of the organization
+   * @return a single organization
+   */
+  @Operation(summary = &quot;Get a single organization&quot;)
+  @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
+  @GetMapping(&quot;&quot;)
+  public UCSBOrganization getById(@Parameter(name = &quot;orgCode&quot;) @RequestParam String orgCode) {
+<span class="fc" id="L50">    UCSBOrganization org =</span>
+        ucsbOrganizationRepository
+<span class="fc" id="L52">            .findById(orgCode)</span>
+<span class="fc" id="L53">            .orElseThrow(() -&gt; new EntityNotFoundException(UCSBOrganization.class, orgCode));</span>
+
+<span class="fc" id="L55">    return org;</span>
+  }
+
+  /**
+   * This method creates a new organization. Accessible only to users with the role &quot;ROLE_ADMIN&quot;.
+   *
+   * @param orgCode code of the organization
+   * @param orgTranslationShort short translation of the organization name
+   * @param orgTranslation full translation of the organization name
+   * @param inactive whether or not the organization is inactive
+   * @return the saved organization
+   */
   @Operation(summary = &quot;Create a new organization&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
   @PostMapping(&quot;/post&quot;)
@@ -40,15 +73,15 @@ import org.springframework.web.bind.annotation.RestController;
       @Parameter(name = &quot;orgTranslation&quot;) @RequestParam String orgTranslation,
       @Parameter(name = &quot;inactive&quot;) @RequestParam boolean inactive) {
 
-<span class="fc" id="L43">    UCSBOrganization org = new UCSBOrganization();</span>
-<span class="fc" id="L44">    org.setOrgCode(orgCode);</span>
-<span class="fc" id="L45">    org.setOrgTranslationShort(orgTranslationShort);</span>
-<span class="fc" id="L46">    org.setOrgTranslation(orgTranslation);</span>
-<span class="fc" id="L47">    org.setInactive(inactive);</span>
+<span class="fc" id="L76">    UCSBOrganization org = new UCSBOrganization();</span>
+<span class="fc" id="L77">    org.setOrgCode(orgCode);</span>
+<span class="fc" id="L78">    org.setOrgTranslationShort(orgTranslationShort);</span>
+<span class="fc" id="L79">    org.setOrgTranslation(orgTranslation);</span>
+<span class="fc" id="L80">    org.setInactive(inactive);</span>
 
-<span class="fc" id="L49">    UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
+<span class="fc" id="L82">    UCSBOrganization savedOrg = ucsbOrganizationRepository.save(org);</span>
 
-<span class="fc" id="L51">    return savedOrg;</span>
+<span class="fc" id="L84">    return savedOrg;</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
