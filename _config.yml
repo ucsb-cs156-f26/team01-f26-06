@@ -23,4 +23,4 @@ repo_name: "TBD"
 repo: ucsb-cs156-f26/team01-f26-06
 owner: ucsb-cs156-f26
 repo_name: team01-f26-06
-pull_requests: [{"author":{"id":"U_kgDOCMLbkw","is_bot":false,"login":"annagornyitzki","name":"Anna Gornyitzki"},"headRefName":"Anna-ArticlesDelete","number":51,"title":"Articles: add DELETE endpoint","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/51"},{"author":{"id":"U_kgDOCMLbkw","is_bot":false,"login":"annagornyitzki","name":"Anna Gornyitzki"},"headRefName":"Anna-ArticlesPut","number":50,"title":"Articles: add PUT endpoint","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/50"}]
+pull_requests: [{"author":{"id":"U_kgDOBXU0vg","is_bot":false,"login":"XJ1729","name":"XJ"},"headRefName":"Kathleen-UCSBOrganizationTable","number":56,"title":"Add UCSBOrganization table","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/56"},{"author":{"id":"U_kgDOCMLbkw","is_bot":false,"login":"annagornyitzki","name":"Anna Gornyitzki"},"headRefName":"Anna-ArticlesDelete","number":51,"title":"Articles: add DELETE endpoint","url":"https://github.com/ucsb-cs156-f26/team01-f26-06/pull/51"}]
