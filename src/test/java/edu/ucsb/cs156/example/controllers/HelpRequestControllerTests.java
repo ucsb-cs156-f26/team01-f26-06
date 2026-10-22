@@ -229,6 +229,61 @@ public class HelpRequestControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
+  // Tests for DELETE /api/helprequest?id=...
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_can_delete_a_helprequest() throws Exception {
+    // arrange
+    LocalDateTime ldt = LocalDateTime.parse("2026-10-20T12:00:00");
+
+    HelpRequest helpRequest =
+        HelpRequest.builder()
+            .requesterEmail("a@ucsb.edu")
+            .teamId("team01")
+            .tableOrBreakoutRoom("table 1")
+            .requestTime(ldt)
+            .explanation("Stuck on tests")
+            .solved(false)
+            .build();
+
+    when(helpRequestRepository.findById(eq(15L))).thenReturn(Optional.of(helpRequest));
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/helprequest").param("id", "15").with(csrf()))
+            .andExpect(status().isOk())
+            .andReturn();
+
+    // assert
+    verify(helpRequestRepository, times(1)).findById(15L);
+    verify(helpRequestRepository, times(1)).delete(helpRequest);
+
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("HelpRequest with id 15 deleted", json.get("message"));
+  }
+
+  @WithMockUser(roles = {"ADMIN", "USER"})
+  @Test
+  public void admin_tries_to_delete_non_existent_helprequest_and_gets_right_error_message()
+      throws Exception {
+    // arrange
+    when(helpRequestRepository.findById(eq(15L))).thenReturn(Optional.empty());
+
+    // act
+    MvcResult response =
+        mockMvc
+            .perform(delete("/api/helprequest").param("id", "15").with(csrf()))
+            .andExpect(status().isNotFound())
+            .andReturn();
+
+    // assert
+    verify(helpRequestRepository, times(1)).findById(15L);
+    Map<String, Object> json = responseToJson(response);
+    assertEquals("HelpRequest with id 15 not found", json.get("message"));
+  }
+
   // Tests for PUT /api/helprequest?id=...
 
   @WithMockUser(roles = {"ADMIN", "USER"})
@@ -309,15 +364,3 @@ public class HelpRequestControllerTests extends ControllerTestCase {
                 put("/api/helprequest")
                     .param("id", "67")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .characterEncoding("utf-8")
-                    .content(requestBody)
-                    .with(csrf()))
-            .andExpect(status().isNotFound())
-            .andReturn();
-
-    // assert
-    verify(helpRequestRepository, times(1)).findById(67L);
-    Map<String, Object> json = responseToJson(response);
-    assertEquals("HelpRequest with id 67 not found", json.get("message"));
-  }
-}
