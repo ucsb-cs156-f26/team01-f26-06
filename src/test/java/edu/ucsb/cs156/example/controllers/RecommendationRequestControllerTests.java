@@ -174,13 +174,11 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
     assertEquals(expectedJson, responseString);
   }
 
-  // Authorization tests for /api/RecommendationRequest?id=...
+  // Tests for GET /api/RecommendationRequest?id=...
 
   @Test
   public void logged_out_users_cannot_get_by_id() throws Exception {
-    mockMvc
-        .perform(get("/api/RecommendationRequest").param("id", "7"))
-        .andExpect(status().is(403)); // logged out users can't get by id
+    mockMvc.perform(get("/api/RecommendationRequest").param("id", "7")).andExpect(status().is(403));
   }
 
   @WithMockUser(roles = {"USER"})
@@ -189,16 +187,13 @@ public class RecommendationRequestControllerTests extends ControllerTestCase {
 
     // arrange
 
-    LocalDateTime dateRequested = LocalDateTime.parse("2026-10-20T12:00:00");
-    LocalDateTime dateNeeded = LocalDateTime.parse("2026-11-20T12:00:00");
-
     RecommendationRequest recommendationRequest =
         RecommendationRequest.builder()
             .requesterEmail("student@ucsb.edu")
             .professorEmail("professor@ucsb.edu")
             .explanation("Need recommendation for graduate school")
-            .dateRequested(dateRequested)
-            .dateNeeded(dateNeeded)
+            .dateRequested(LocalDateTime.parse("2026-10-20T12:00:00"))
+            .dateNeeded(LocalDateTime.parse("2026-11-20T12:00:00"))
             .done(false)
             .build();
 

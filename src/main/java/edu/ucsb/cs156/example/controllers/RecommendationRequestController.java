@@ -42,6 +42,29 @@ public class RecommendationRequestController extends ApiController {
   }
 
   /**
+   * Get a single recommendation request by id
+   *
+   * @param id the database id of the recommendation request
+   * @return the recommendation request with the given id
+   */
+  @Operation(
+      summary = "Get a single recommendation request",
+      description = "Returns the recommendation request with the given id, or a 404 if none exists")
+  @PreAuthorize("hasRole('ROLE_USER')")
+  @GetMapping("")
+  public RecommendationRequest getById(
+      @Parameter(name = "id", description = "Database id of the recommendation request, e.g. 7")
+          @RequestParam
+          Long id) {
+    RecommendationRequest recommendationRequest =
+        recommendationRequestRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
+
+    return recommendationRequest;
+  }
+
+  /**
    * Create a new recommendation request
    *
    * @param requesterEmail email of the student requesting the recommendation
@@ -98,29 +121,6 @@ public class RecommendationRequestController extends ApiController {
     recommendationRequest.setDone(done);
 
     return recommendationRequestRepository.save(recommendationRequest);
-  }
-
-  /**
-   * Get a single recommendation request by id
-   *
-   * @param id the id of the recommendation request
-   * @return the recommendation request with the given id
-   */
-  @Operation(
-      summary = "Get a single recommendation request",
-      description = "Returns the recommendation request with the given id, or a 404 if none exists")
-  @PreAuthorize("hasRole('ROLE_USER')")
-  @GetMapping("")
-  public RecommendationRequest getById(
-      @Parameter(name = "id", description = "Database id of the recommendation request, e.g. 7")
-          @RequestParam
-          Long id) {
-    RecommendationRequest recommendationRequest =
-        recommendationRequestRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(RecommendationRequest.class, id));
-
-    return recommendationRequest;
   }
 
   @Operation(
